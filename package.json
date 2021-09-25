@@ -1,7 +1,7 @@
 {
-  "name": "web3-starter",
+  "name": "nft-minter",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -30,20 +30,14 @@
     "eslint": "^7.32.0",
     "eslint-config-next": "^11.1.2"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/l3wi/web3-starter.git"
-  },
   "keywords": [
     "web3",
     "nextjs",
     "ethers",
-    "useWallet"
+    "useWallet",
+    "nft",
+    "minting"
   ],
   "author": "l3wi",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/l3wi/web3-starter/issues"
-  },
-  "homepage": "https://github.com/l3wi/web3-starter#readme"
+  "license": "UNLICENSED"
 }
