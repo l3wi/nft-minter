@@ -1,7 +1,7 @@
 import { Web3Provider } from "../contexts/useWeb3"
 import { useWallet, UseWalletProvider } from "use-wallet"
 import { AlertProvider } from "../contexts/useAlerts"
-
+import { chainID } from "../utils/ethers"
 import { ChakraProvider, CSSReset, extendTheme } from "@chakra-ui/react"
 
 const theme = {
@@ -19,8 +19,6 @@ const theme = {
     }
   }
 }
-
-const chainID = process.env.CHAIN_ID ? parseInt(process.env.CHAIN_ID) : 1
 
 export default function App({ Component, pageProps }) {
   return (
