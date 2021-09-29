@@ -1,29 +1,41 @@
-import React from 'react'
-import { Image } from '@chakra-ui/image'
-import { IconButton } from '@chakra-ui/button'
-import { FiSun, FiMoon } from 'react-icons/fi'
-import { useColorMode, useColorModeValue } from '@chakra-ui/color-mode'
-import { Box, Flex, LinkBox, LinkOverlay } from '@chakra-ui/layout'
+import React from "react"
+import { Heading, Center, Image } from "@chakra-ui/react"
+import { IconButton } from "@chakra-ui/button"
+import { FiSun, FiMoon } from "react-icons/fi"
+import { useColorMode, useColorModeValue } from "@chakra-ui/color-mode"
+import { Box, Flex, LinkBox, LinkOverlay } from "@chakra-ui/layout"
 
-import { useWeb3 } from '../../contexts/useWeb3'
-
-import UserAddress from './wallet'
+import { useWeb3 } from "../../contexts/useWeb3"
+import { useRouter } from "next/router"
+import UserAddress from "./wallet"
 
 const Header = () => {
+  const router = useRouter()
   const { account, balance } = useWeb3()
   const { colorMode, toggleColorMode } = useColorMode()
 
-  const isDarkMode = colorMode === 'dark'
-  const buttonHoverBgColor = useColorModeValue('gray.100', 'gray.700')
+  const isDarkMode = colorMode === "dark"
+  const buttonHoverBgColor = useColorModeValue("gray.100", "gray.700")
 
   return (
-    <>
-      <Flex justifyContent="space-between" alignItems="center" py={4}>
+    <Center>
+      <Flex
+        justifyContent="space-between"
+        alignItems="center"
+        py={4}
+        w="100%"
+        maxW={{ base: "100%", md: 1440 }}
+      >
         {/* Hardcoded 283 for now to center user wallet component */}
-        <LinkBox width={['auto', 'auto', 283]}>
-          <LinkOverlay href="/">🏔</LinkOverlay>
+        <LinkBox width={["auto", "auto", 283]}>
+          <LinkOverlay onClick={() => router.push("/")}>
+            <Flex alignItems="center">
+              <Image src="/herb.png" w="30px" mr="1" />
+              <Heading size="md">Minter</Heading>
+            </Flex>
+          </LinkOverlay>
         </LinkBox>
-        <Box display={['none', 'none', 'none', 'block']}>
+        <Box display={["none", "none", "none", "block"]}>
           {/* {account && <UserWallet />} */}
         </Box>
         <Box>
@@ -33,13 +45,13 @@ const Header = () => {
             variant="ghost"
             onClick={toggleColorMode}
             icon={isDarkMode ? <FiMoon /> : <FiSun />}
-            aria-label={isDarkMode ? 'Toggle light mode' : 'Toggle dark mode'}
+            aria-label={isDarkMode ? "Toggle light mode" : "Toggle dark mode"}
             _hover={{ background: buttonHoverBgColor }}
           />
           <UserAddress />
         </Box>
       </Flex>
-    </>
+    </Center>
   )
 }
 
