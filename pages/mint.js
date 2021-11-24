@@ -165,7 +165,7 @@ export default function Home() {
       ? await generateSHA256FileHash(
           acceptedMediaFiles[acceptedMediaFiles.length - 1]
         )
-      : "0xe3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855";
+      : "0x0000000000000000000000000000000000000000000000000000000000000000";
     const imgURL = `ipfs://${fileHash}`;
     const imgHash = await generateSHA256FileHash(
       acceptedFiles[acceptedFiles.length - 1]
