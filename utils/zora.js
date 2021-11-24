@@ -7,7 +7,6 @@ export const fetchCollections = async () => {
   const minter = new ethers.Contract(zoraMinter[chainID], zoraMinter.abi, web3);
   const filter = minter.filters.CreatedEdition();
   const ids = await minter.queryFilter(filter);
-  console.log(ids);
   const collections = await Promise.all(
     ids.map((item) => fetchCollection(item.args.editionId.toString()))
   );
@@ -17,7 +16,7 @@ export const fetchCollections = async () => {
 export const fetchCollection = async (id) => {
   const minter = new ethers.Contract(zoraMinter[chainID], zoraMinter.abi, web3);
   const address = await minter.getEditionAtId(id);
-  return await fetchCollectionAtAddress(address)
+  return {...(await fetchCollectionAtAddress(address)), id}
 }
 
 export const fetchCollectionAtAddress = async (address) => {
@@ -47,9 +46,9 @@ export const fetchCollectionAtAddress = async (address) => {
     salePrice: salePrice.toString(),
     editionSize: editionSize.toString(),
     URIs,
-    numberMinted,
+    numberMinted: numberMinted.toString(),
     address,
-    balance,
+    balance: balance.toString(),
   };
 }
 

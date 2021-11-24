@@ -5,11 +5,11 @@ import { normalizeIpfsHash } from "../../utils/helpers";
 import useWeb3 from "../../contexts/useWeb3";
 
 const Card = (data, account) => {
-  const { name, symbol, editionSize, owner, URIs, id } = data;
+  const { name, symbol, address, editionSize, owner, URIs, id } = data;
 
   const content = (
     <Box
-      key={name}
+      key={address}
       bg={useColorModeValue("white", "gray.800")}
       w="fit-content"
       maxW="sm"

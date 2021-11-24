@@ -14,18 +14,18 @@ import Page from "../components/page";
 import Card from "../components/card";
 import Hero from "../components/hero";
 
-export default function Home() {
+export default function Home({collections}) {
   const router = useRouter();
   const { web3, connectWallet, disconnectWallet, account, balance } = useWeb3();
-  const [collections, setCollections] = useState([]);
+  // const [collections, setCollections] = useState([]);
   const cardBgColor = useColorModeValue("white", "gray.700");
   const alertBgColor = useColorModeValue("gray.50", "gray.600");
 
-  useEffect(async () => {
-    const data = await fetchCollections();
-    console.log(data);
-    setCollections(data);
-  }, []);
+  // useEffect(async () => {
+  //   const data = await fetchCollections();
+  //   console.log(data);
+  //   setCollections(data);
+  // }, []);
 
   return (
     <Page>
@@ -54,4 +54,15 @@ export default function Home() {
       </Center>
     </Page>
   );
+}
+
+export async function getServerSideProps({ req, res }) {
+  res.setHeader(
+    'Cache-Control',
+    'public, s-maxage=120, stale-while-revalidate=129'
+  )
+
+  return {
+    props: {collections: await fetchCollections()},
+  }
 }
