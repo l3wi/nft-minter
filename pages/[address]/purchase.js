@@ -35,7 +35,7 @@ const PurchaseList = ({ address }) => {
       <List>
         {purchaseList.results?.map((result) => (
           <ListItem>
-            purchased by <AddressView address={result.minter} /> at{" "}
+            Minted by <em><AddressView address={result.minter} /></em> at{" "}
             {dateFormatter.format(new Date(result.mintTransferEvent.blockTimestamp))}
           </ListItem>
         ))}
