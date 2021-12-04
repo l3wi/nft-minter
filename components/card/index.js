@@ -1,19 +1,19 @@
-import { Link, Flex, Box, Image, Badge } from "@chakra-ui/react";
-import { useColorModeValue } from "@chakra-ui/color-mode";
+import { Link, Flex, Box, Image, Badge } from '@chakra-ui/react'
+import { useColorModeValue } from '@chakra-ui/color-mode'
 
-import { normalizeIpfsHash } from "../../utils/helpers";
-import useWeb3 from "../../contexts/useWeb3";
+import { normalizeIpfsHash } from '../../utils/helpers'
+import useWeb3 from '../../contexts/useWeb3'
 
 const Card = (data, account) => {
-  const { name, symbol, address, editionSize, owner, URIs, id } = data;
+  const { name, symbol, address, editionSize, owner, URIs, id } = data
 
   const content = (
     <Box
       key={address}
-      bg={useColorModeValue("white", "gray.800")}
+      bg={useColorModeValue('white', 'gray.800')}
       w="fit-content"
       maxW="sm"
-      _hover={{ textDecoration: "none" }}
+      _hover={{ textDecoration: 'none' }}
       borderWidth="1px"
       rounded="lg"
       shadow="lg"
@@ -40,7 +40,7 @@ const Card = (data, account) => {
             textTransform="uppercase"
             ml="2"
           >
-            EDITION OF {editionSize}
+            #{editionSize}
           </Box>
         </Box>
 
@@ -55,7 +55,7 @@ const Card = (data, account) => {
         </Box>
 
         <Box>
-          Owner: {owner.slice(0, 8) + "..." + owner.slice(owner.length - 3, -1)}{" "}
+          Owner: {owner.slice(0, 8) + '...' + owner.slice(owner.length - 3, -1)}{' '}
           {owner === account && (
             <Badge rounded="full" px="2" colorScheme="green">
               You
@@ -64,17 +64,17 @@ const Card = (data, account) => {
         </Box>
       </Box>
     </Box>
-  );
+  )
 
   if (!id) {
-    return content;
+    return content
   }
 
   return (
-    <Link sx={{ _hover: { textDecoration: "none" } }} href={`/manage/${id}`}>
+    <Link sx={{ _hover: { textDecoration: 'none' } }} href={`/${address}`}>
       {content}
     </Link>
-  );
-};
+  )
+}
 
-export default Card;
+export default Card
