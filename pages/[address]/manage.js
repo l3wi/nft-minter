@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react'
 import {
-  Grid,
-  Divider,
+  chakra,
   Flex,
   FormControl,
   FormLabel,
@@ -10,111 +9,132 @@ import {
   StatGroup,
   StatNumber,
   StatLabel,
-  Textarea,
-} from "@chakra-ui/react";
-import Link from "next/link";
-import { Box, Heading, Text, Center } from "@chakra-ui/layout";
-import { Alert, AlertIcon } from "@chakra-ui/alert";
-import { Button, IconButton } from "@chakra-ui/button";
-import { useColorModeValue } from "@chakra-ui/color-mode";
-import { useWeb3 } from "../../contexts/useWeb3";
+  Textarea
+} from '@chakra-ui/react'
+import Link from 'next/link'
+import { Box, Heading, Text, Center } from '@chakra-ui/layout'
+import { Alert, AlertIcon } from '@chakra-ui/alert'
+import { Button, IconButton } from '@chakra-ui/button'
+import { useColorModeValue } from '@chakra-ui/color-mode'
+import { useWeb3 } from '../../contexts/useWeb3'
 import {
-  fetchCollection,
+  fetchCollectionAtAddress,
   setEditionSalesPrice,
   mintBulkEditions,
-  withdrawMintFunds,
-} from "../../utils/zora";
-import { ethers, utils } from "ethers";
+  withdrawMintFunds
+} from '../../utils/zora'
+import { ethers, utils } from 'ethers'
 
-import { useRouter } from "next/router";
+import { useRouter } from 'next/router'
 
-import Head from "next/head";
-import Page from "../../components/page";
-import Card from "../../components/card";
-import ManageHero from "../../components/manage";
+import Head from 'next/head'
+import Page from '../../components/page'
+import Card from '../../components/card'
+import ManageHero from '../../components/manage'
 
 function isValidPrice(price) {
   try {
-    utils.parseEther(price);
+    utils.parseEther(price)
   } catch {
-    return false;
+    return false
   }
-  return true;
+  return true
 }
 
 function getAddressListCount(addressesList) {
   return addressesList
-    .split("\n")
+    .split('\n')
     .map((addr) => ethers.utils.isAddress(addr))
     .reduce((last, now) => {
       if (now) {
-        return last + 1;
+        return last + 1
       }
-      return last;
-    }, 0);
+      return last
+    }, 0)
 }
 
 export default function Manage() {
-  const router = useRouter();
-  const [price, setPrice] = useState();
-  const { web3, connectWallet, disconnectWallet, account, balance } = useWeb3();
-  const [collection, setCollection] = useState();
+  const router = useRouter()
+  const [price, setPrice] = useState()
+  const { web3, connectWallet, disconnectWallet, account, balance } = useWeb3()
+  const [collection, setCollection] = useState()
 
-  const [addressesMintBulk, setAddressesMintBulk] = useState("");
-  const addressListCount = getAddressListCount(addressesMintBulk);
+  const [addressesMintBulk, setAddressesMintBulk] = useState('')
+  const addressListCount = getAddressListCount(addressesMintBulk)
   const addressBulkInvalid =
     addressesMintBulk === 0 ||
-    addressListCount < addressesMintBulk.split("\n").length;
+    addressListCount < addressesMintBulk.split('\n').length
 
   useEffect(async () => {
     if (router.isReady) {
-      const data = await fetchCollection(router.query.id);
-      setCollection(data);
+      const data = await fetchCollectionAtAddress(router.query.address)
+      setCollection(data)
     }
-  }, [router.isReady]);
-  const cardBgColor = useColorModeValue("white", "gray.700");
+  }, [router.isReady])
+
+  const cardBgColor = useColorModeValue('white', 'gray.700')
 
   const setSalesPrice = async () => {
-    const etherPrice = ethers.utils.parseEther(price);
-    await setEditionSalesPrice(collection.address, etherPrice);
-  };
+    const etherPrice = ethers.utils.parseEther(price)
+    await setEditionSalesPrice(collection.address, etherPrice)
+  }
 
   const stopSale = async () => {
-    await setEditionSalesPrice(collection.address, "0");
-  };
+    await setEditionSalesPrice(collection.address, '0')
+  }
 
   const mintBulk = async () => {
-    await mintBulkEditions(collection.address, addressesMintBulk.split("\n"));
-  };
+    await mintBulkEditions(collection.address, addressesMintBulk.split('\n'))
+  }
 
   const withdraw = async () => {
-    await withdrawMintFunds(collection.address);
-  };
+    await withdrawMintFunds(collection.address)
+  }
 
-  const isOwner = collection?.owner === account;
+  const isOwner = collection?.owner === account
 
   return (
     <Page>
       <Head>
-        <title>Manage Edition</title>
+        <title>{collection ? collection.name : 'NFT Printer'}</title>
         <link rel="icon" href="/herb.png" />
       </Head>
-      <ManageHero />
+
       <Center>
         <Flex
           flexDirection="column"
           w="100%"
-          maxW={{ base: "100%", md: 1440 }}
+          maxW={{ base: '100%', md: 1440 }}
           mt={4}
           alignItems="flex-start"
         >
-          <Flex flexDirection="column">
-            <Heading size="md" mb="4">
-              Manage Edition
-            </Heading>
+          <Box>
+            <chakra.p
+              mb={2}
+              fontSize="xs"
+              fontWeight="semibold"
+              letterSpacing="wide"
+              color="gray.400"
+              textTransform="uppercase"
+            >
+              Managers welcome
+            </chakra.p>
+            <chakra.h1
+              mb={3}
+              fontSize={{ base: '3xl', md: '4xl' }}
+              fontWeight="bold"
+              lineHeight="shorter"
+              color={useColorModeValue('gray.900', 'white')}
+            >
+              Manage your Edition NFTs
+            </chakra.h1>
+            <chakra.p mb={5} color="gray.500" fontSize={{ md: 'lg' }}>
+              Sell your own editions for a fixed price of Ether with Zora.{' '}
+              <br /> Mint your edition directly to wallets.
+            </chakra.p>
+          </Box>
 
-            {collection && Card(collection, account)}
-
+          <Flex flexDirection="column" w="800px">
             <StatGroup my={6}>
               <Stat>
                 <StatLabel>Number minted</StatLabel>
@@ -131,22 +151,15 @@ export default function Manage() {
                 <StatNumber>
                   {collection?.balance
                     ? ethers.utils.formatEther(collection?.balance)
-                    : "???"}{" "}
-                  eth
+                    : '???'}{' '}
+                  ETH
                 </StatNumber>
               </Stat>
             </StatGroup>
 
-            <Box>
-              Go to{" "}
-              <Link href={`/${collection?.address}/purchase`}>
-                purchase page
-              </Link>
-            </Box>
-
             {isOwner ? (
               <Heading size="md" mt="4">
-                You own this NFT.
+                You control the {collection?.name} NFT.
               </Heading>
             ) : (
               <Alert status="warning">
@@ -156,41 +169,30 @@ export default function Manage() {
             )}
 
             <Flex
-              sx={{ opacity: isOwner ? 1 : "0.1" }}
+              sx={{ opacity: isOwner ? 1 : '0.1' }}
               flexDirection="column"
-              w="100%"
-              maxW={{ base: "100%", md: 800 }}
-              mt={{ base: 10, md: 20 }}
               alignItems="flex-start"
             >
-              <Heading size="lg" color="gray.700">
-                Manage edition distribution and sales
-              </Heading>
-              <Text mt="2" color="gray.600">
-                Fill out an ether price to allow people to mint available
-                editions for a fixed cost.
-              </Text>
-
               <Box
                 mt="5"
-                w="100%"
                 bg={cardBgColor}
                 shadow="xl"
                 borderRadius="2xl"
                 p={8}
+                w="100%"
               >
                 <Heading size="md" mb="2">
                   Pricing information
                 </Heading>
-                {collection?.salePrice && collection.salePrice !== "0" ? (
+                {collection?.salePrice && collection.salePrice !== '0' ? (
                   <React.Fragment>
                     <Text mt="2" color="gray.600">
-                      This edition is currently on sale for{" "}
+                      This edition is currently on sale for{' '}
                       {ethers.utils.formatEther(collection?.salePrice)} eth
                     </Text>
                     <Flex mt="3" justifyContent="space-between">
                       <Button
-                        isDisabled={price === "0"}
+                        isDisabled={price === '0'}
                         onClick={() => stopSale()}
                         colorScheme="red"
                       >
@@ -268,7 +270,7 @@ export default function Manage() {
                     colorScheme="green"
                   >
                     Mint to {addressListCount} wallet
-                    {addressListCount === 1 ? "" : "s"}
+                    {addressListCount === 1 ? '' : 's'}
                   </Button>
                 </Flex>
               </Box>
@@ -285,15 +287,15 @@ export default function Manage() {
                   Withdraw your funds
                 </Heading>
                 <Text>
-                  Received{" "}
+                  Received{' '}
                   {collection?.balance
                     ? ethers.utils.formatEther(collection?.balance)
-                    : "???"}{" "}
+                    : '???'}{' '}
                   eth unclaimed from sales
                 </Text>
                 <Flex mt="3" justifyContent="space-between">
                   <Button
-                    isDisabled={collection?.balance.toString() === "0"}
+                    isDisabled={collection?.balance.toString() === '0'}
                     onClick={() => withdraw()}
                     colorScheme="green"
                   >
@@ -306,5 +308,5 @@ export default function Manage() {
         </Flex>
       </Center>
     </Page>
-  );
+  )
 }

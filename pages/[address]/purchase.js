@@ -1,5 +1,5 @@
-import Card from "../../components/card";
-import useWeb3 from "../../contexts/useWeb3";
+import Card from '../../components/card'
+import useWeb3 from '../../contexts/useWeb3'
 import {
   Flex,
   Box,
@@ -11,74 +11,80 @@ import {
   Center,
   Button,
   StatGroup,
-  StatLabel,
-} from "@chakra-ui/react";
-import { useState, useEffect } from "react";
-import { useRouter } from "next/router";
-import Head from "next/head";
-import Page from "../../components/page";
-import { fetchCollectionAtAddress } from "../../utils/zora";
-import { ethers } from "ethers";
-import PurchaseHero from "../../components/purchase";
-import { useNFTIndexerQuery, NFTFetchConfiguration } from "@zoralabs/nft-hooks";
-import { chainID } from "../../utils/ethers";
-import { purchaseEdition } from "../../utils/zora";
-import { AddressView } from "../../components/address";
+  StatLabel
+} from '@chakra-ui/react'
+import { useState, useEffect } from 'react'
+import { useRouter } from 'next/router'
+import Head from 'next/head'
+import Page from '../../components/page'
+import { fetchCollectionAtAddress } from '../../utils/zora'
+import { ethers } from 'ethers'
+import PurchaseHero from '../../components/purchase'
+import { useNFTIndexerQuery, NFTFetchConfiguration } from '@zoralabs/nft-hooks'
+import { chainID } from '../../utils/ethers'
+import { purchaseEdition } from '../../utils/zora'
+import { AddressView } from '../../components/address'
 
 const PurchaseList = ({ address }) => {
   const purchaseList = useNFTIndexerQuery({
-    collectionAddresses: [address],
-  });
-  const dateFormatter = new Intl.DateTimeFormat('en-US', {dateStyle: 'medium', timeStyle: 'short'});
+    collectionAddresses: [address]
+  })
+  const dateFormatter = new Intl.DateTimeFormat('en-US', {
+    dateStyle: 'medium',
+    timeStyle: 'short'
+  })
   return (
     <Box>
       <List>
-        {purchaseList.results?.map((result) => (
-          <ListItem>
-            Minted by <em><AddressView address={result.minter} /></em> at{" "}
-            {dateFormatter.format(new Date(result.mintTransferEvent.blockTimestamp))}
+        {purchaseList.results?.map((i, result) => (
+          <ListItem key={i}>
+            Minted by{' '}
+            <em>
+              <AddressView address={result.minter} />
+            </em>{' '}
+            at{' '}
+            {dateFormatter.format(
+              new Date(result.mintTransferEvent.blockTimestamp)
+            )}
           </ListItem>
         ))}
       </List>
     </Box>
-  );
-};
+  )
+}
 
 const Purchase = () => {
-  const { account, networkId } = useWeb3();
-  const router = useRouter();
-  const [collection, setCollection] = useState();
+  const { account, networkId } = useWeb3()
+  const router = useRouter()
+  const [collection, setCollection] = useState()
 
   useEffect(async () => {
     if (router.isReady) {
-      const data = await fetchCollectionAtAddress(router.query.address);
-      setCollection(data);
+      const data = await fetchCollectionAtAddress(router.query.address)
+      setCollection(data)
     }
-  }, [router.isReady]);
+  }, [router.isReady])
 
   const purchase = async () => {
-    await purchaseEdition(collection?.address, collection?.salePrice);
-  };
+    await purchaseEdition(collection?.address, collection?.salePrice)
+  }
 
   return (
     <Page>
       <Head>
-        <title>Manage Edition</title>
+        <title>{collection ? collection.name : 'NFT Printer'}</title>
         <link rel="icon" href="/herb.png" />
       </Head>
-      <PurchaseHero />
       <Center>
         <Flex
           flexDirection="column"
           w="100%"
-          maxW={{ base: "100%", md: 1440 }}
+          maxW={{ base: '100%', md: 1440 }}
           mt={4}
           alignItems="flex-start"
         >
           <Flex flexDirection="column">
-            <Heading size="md" mb="4">
-              Purchase Edition
-            </Heading>
+            <PurchaseHero />
 
             {collection && Card(collection, account)}
 
@@ -103,10 +109,10 @@ const Purchase = () => {
                 <StatLabel>Sale price</StatLabel>
                 <StatNumber>
                   {collection?.salePrice &&
-                  collection?.salePrice.toString() !== "0"
+                  collection?.salePrice.toString() !== '0'
                     ? ethers.utils.formatEther(collection?.salePrice)
-                    : "Not for sale"}{" "}
-                  eth
+                    : 'Not for sale'}{' '}
+                  ETH
                 </StatNumber>
               </Stat>
             </StatGroup>
@@ -119,7 +125,7 @@ const Purchase = () => {
         </Flex>
       </Center>
     </Page>
-  );
-};
+  )
+}
 
-export default Purchase;
+export default Purchase
